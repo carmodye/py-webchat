@@ -1,0 +1,22 @@
+version = 0.1
+[ab-carmody]
+[ab-carmody.deploy]
+[ab-carmody.deploy.parameters]
+stack_name = "ab-devices"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-hsm77ga61yqi"
+s3_prefix = "ab-devices"
+region = "us-east-1"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+image_repositories = []
+
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "ab-devices-carmody"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-hsm77ga61yqi"
+s3_prefix = "ab-devices-carmody"
+region = "us-east-1"
+capabilities = "CAPABILITY_IAM"
+image_repositories = []
+confirm_changeset = true

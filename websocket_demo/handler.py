@@ -2,6 +2,7 @@
 import json
 import boto3
 import sys
+import datetime
 
 from libs import aws
 from libs.helpers import safe_dumps
@@ -122,7 +123,8 @@ def _help(event):
 def _set_name(message, event):
     name = message.split('/name')[-1]
     connection_id = _get_connection_id(event)
-    aws.save_username(connection_id, name.strip())
+    stamp = str(datetime.datetime.now())
+    aws.save_username(connection_id, name.strip(), stamp)
 
     _send_message_to_client(event, 'Set username to {}'.format(name.strip()))
 

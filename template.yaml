@@ -8,7 +8,7 @@ Globals:
     Timeout: 3
     CodeUri: websocket_demo/
     MemorySize: 1024
-    Runtime: python3.8
+    Runtime: python3.9
     Environment:
       Variables:
         DYNAMO_TABLE_NAME: !Ref ConnectionsTable

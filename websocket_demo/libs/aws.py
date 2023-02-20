@@ -1,6 +1,7 @@
 import os
 import boto3
 import hashlib
+import datetime
 
 from .helpers import safe_dumps
 
@@ -8,11 +9,9 @@ MESSAGE_TABLE_NAME = os.environ['DYNAMO_TABLE_NAME']
 
 # DynamoDB stuff
 
-
 def get_dynamodb():    # pragma: no cover
     """Return a dynamodb resource"""
     return boto3.resource('dynamodb')
-
 
 def get_table(table_name=MESSAGE_TABLE_NAME):    # pragma: no cover
     """Create a dynamodb resource"""
@@ -35,6 +34,7 @@ def set_connection_id(connection_id, channel='general'):
             ':value': {
                 'connection_id': connection_id,
                 'channel': channel,
+                'eventtime': str(datetime.datetime.now()),
             }
         },
         ReturnValues='UPDATED_NEW',
@@ -89,14 +89,20 @@ def update_channel_name(connection_id, name):
     set_connection_id(connection_id, name)
 
 
-def save_username(connection_id, name):
+def save_username(connection_id, name, stamp):
     update_expr = 'SET username = :value'
+    update_expr1 = 'SET eventtime = :value'
 
     table = get_table()
     table.update_item(
         Key=_get_user_key(connection_id),
         UpdateExpression=update_expr,
         ExpressionAttributeValues={':value': name},
+    )
+    table.update_item(
+       Key=_get_user_key(connection_id),
+       UpdateExpression=update_expr1,
+       ExpressionAttributeValues={':value': stamp},
     )
 
 
@@ -108,6 +114,7 @@ def save_message(connection_id, epoch, message, channel='general'):
         'connectionId': connection_id,
         'channel': channel,
         'message': message,
+        'eventtime': str(datetime.datetime.now()),
     }
 
     table = get_table()
